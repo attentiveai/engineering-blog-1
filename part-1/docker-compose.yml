@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: test_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    container_name: test_db_cont
+    ports:
+      - "15432:5432"
+    volumes:
+      - db_vol:/var/lib/postgresql/data
+
+  rabbit:
+    build:
+      context: ./docker
+      dockerfile: ./dockerfile-rabbit.df
+    image: rabbit-custom
+    container_name: rabbit
+    hostname: test
+    env_file:
+      - docker/config/rabbitmq.conf
+    ports:
+      - "15672:5672"
+
+volumes:
+  db_vol:
